@@ -1,1 +1,596 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX StudyJam - Final Qualified Students</title>
+    <meta name="description" content="UI/UX StudyJam 2025 Certificate Qualified Students - Interactive dashboard showing 17 students who completed all exercises and met attendance requirements">
+    <meta name="keywords" content="UI/UX, StudyJam, certificates, Figma, workshop, students">
+    <meta property="og:title" content="UI/UX StudyJam 2025 - Qualified Students">
+    <meta property="og:description" content="Interactive dashboard showing certificate-qualified students">
+    <meta property="og:type" content="website">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 5px 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .header .criteria {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .criteria h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .criteria ul {
+            margin: 0;
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f0fdf4;
+            border-bottom: 1px solid #bbf7d0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #bbf7d0;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #374151;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            background: #f0fdf4;
+            border-bottom: 1px solid #bbf7d0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #bbf7d0;
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1;
+            max-width: 300px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #059669;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f0fdf4;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #bbf7d0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 12px;
+        }
+
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #f0fdf4;
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: #f0fdf4;
+        }
+
+        .figma-link {
+            color: #059669;
+            text-decoration: none;
+            font-weight: 500;
+            word-break: break-all;
+            display: block;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .figma-link:hover {
+            text-decoration: underline;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 150px;
+        }
+
+        .email {
+            color: #6b7280;
+            font-size: 12px;
+            max-width: 200px;
+            word-break: break-all;
+        }
+
+        .timestamp {
+            color: #6b7280;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .team-name {
+            background: #dcfce7;
+            color: #166534;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-block;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .qualified-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🏆 UI/UX StudyJam - Final Qualified Students</h1>
+        <p>Students eligible for certificates</p>
+
+        <div class="criteria">
+            <h3>📋 Certificate Requirements</h3>
+            <ul>
+                <li>✅ Completed all 3 exercises with Figma submissions</li>
+                <li>✅ Attended at least 1.5 hours of each workshop session</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number">17</div>
+            <div class="stat-label">Final Qualified Students</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">31</div>
+            <div class="stat-label">Completed All Exercises</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">59</div>
+            <div class="stat-label">Sufficient Attendance</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Certificate Eligible</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="download-btn" onclick="downloadExcel()">🎓 Download Certificate List (Excel)</button>
+        <input type="text" class="search-box" placeholder="Search qualified students..." oninput="filterTable(this.value)">
+    </div>
+
+    <div class="table-container">
+        <table id="studentsTable">
+            <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Exercise 1 Figma Link</th>
+                <th>Exercise 1 Date</th>
+                <th>Exercise 2 Figma Link</th>
+                <th>Exercise 2 Date</th>
+                <th>Exercise 3 Figma Link</th>
+                <th>Exercise 3 Date</th>
+                <th>Team Name</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Final 17 qualified students - met BOTH exercise completion AND attendance requirements
+    const students = [
+        {
+            "name": "Ayah Abuhaltam",
+            "email": "ayahhaltam@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/ocU6vnQDEXCqsRH5jqw8w3/UI-UX---Study-jam-Tasks?node-id=0-1&t=ZbLLY5xDf59636rj-1",
+            "exercise1_timestamp": "5/27/2025 9:40:08",
+            "exercise2_figma": "https://www.figma.com/design/kHHaHfoOsKu4F7SbLihHof/UI-UX-Study-jam?node-id=6-287&t=9WvOJ9WtA2AVhzyv-1",
+            "exercise2_timestamp": "5/28/2025 23:16:57",
+            "exercise3_figma": "https://www.figma.com/design/kHHaHfoOsKu4F7SbLihHof/UI-UX-Study-jam?node-id=37-31&t=oVb8roer98C672A6-1",
+            "exercise3_timestamp": "6/2/2025 22:42:22",
+            "exercise3_team": "Team 20"
+        },
+        {
+            "name": "ayman salem alharari",
+            "email": "aymanalharari200001@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/GCpxL9evTsKEu6HpFPXE8Q/Day1?node-id=0-1&t=cd58DqOQ2tXepGOd-1",
+            "exercise1_timestamp": "6/2/2025 18:08:44",
+            "exercise2_figma": "https://www.figma.com/design/81nqFYWQK4B63SdbwQlOZy/Day2?node-id=7-40&t=cd58DqOQ2tXepGOd-1",
+            "exercise2_timestamp": "6/2/2025 17:40:59",
+            "exercise3_figma": "https://www.figma.com/design/9QLERmi7tdSEJVQ3S6Ax1K/FinalProject?node-id=69-10&t=NojvQK3oUU7cOiGa-1",
+            "exercise3_timestamp": "6/2/2025 23:30:35",
+            "exercise3_team": "team-8"
+        },
+        {
+            "name": "Bayan Kattab Alawneh",
+            "email": "bayan44alawneh@gamil.com",
+            "exercise1_figma": "https://www.figma.com/design/OCOCsnW3q0r5u5NFhrhxGU/Untitled?node-id=0-1&t=cmK6eIX4WJWb5Yya-1",
+            "exercise1_timestamp": "6/2/2025 22:23:18",
+            "exercise2_figma": "https://www.figma.com/design/mtMpbZO5gQBhnL6xKYwAvb/Untitled?t=QzPrmRQ7qhhY9f6i-1",
+            "exercise2_timestamp": "6/2/2025 22:25:05",
+            "exercise3_figma": "https://www.figma.com/design/KeuQLmZoaLK2MwYJkkE0k6/UI-UX-Group-Project?node-id=4-70&t=Sa18wHAcrmfADHGm-1",
+            "exercise3_timestamp": "6/2/2025 22:45:27",
+            "exercise3_team": "KittyKart"
+        },
+        {
+            "name": "Jad Mahdi Ahmad",
+            "email": "jadjado04@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/Lw6IjNS2GfaS3Dup4VEGXH/Exercise-1?node-id=0-1&t=uDqVdl2BYD25ZOZ9-1",
+            "exercise1_timestamp": "6/2/2025 19:22:28",
+            "exercise2_figma": "https://www.figma.com/design/hOmlfD2uA2lDfakPvpZ0UB/Exercise-2?node-id=5-243&t=uDqVdl2BYD25ZOZ9-1",
+            "exercise2_timestamp": "6/2/2025 20:50:52",
+            "exercise3_figma": "https://www.figma.com/design/jbGQATOTXrvwySg5n7E5ja/Exercise-3-Group---A2--?node-id=0-1&t=KDpKsthPsKhGS2u7-1",
+            "exercise3_timestamp": "6/2/2025 23:42:34",
+            "exercise3_team": "team-A2"
+        },
+        {
+            "name": "Kareem Abu Nofal",
+            "email": "kareemnofal264@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/JUtT3O9YuDRJp7e2LK91Fs/First-HW?node-id=0-1&t=aeyPwN65WegwQDRB-1",
+            "exercise1_timestamp": "6/2/2025 18:36:36",
+            "exercise2_figma": "https://www.figma.com/design/DHoFdvvIe2vH7Etpi1wAsZ/Untitled?node-id=0-1&t=jEDjMnGAJ0Drj5w1-1",
+            "exercise2_timestamp": "6/2/2025 20:26:57",
+            "exercise3_figma": "https://www.figma.com/design/9QLERmi7tdSEJVQ3S6Ax1K/FinalProject?node-id=69-10&t=NojvQK3oUU7cOiGa-1",
+            "exercise3_timestamp": "6/2/2025 23:30:35",
+            "exercise3_team": "team-8"
+        },
+        {
+            "name": "khalil alrahman alkerm",
+            "email": "khaqrm@gmail.com OR 201910812@students.asu.edu.jo",
+            "exercise1_figma": "https://www.figma.com/design/34ApQ8bEiPVPmUb92BEF7h/exercise1?node-id=10-2&t=FGpHQOFALabfy7EQ-1",
+            "exercise1_timestamp": "6/2/2025 22:20:43",
+            "exercise2_figma": "https://www.figma.com/design/D8y4QwZq37hKejcnQdlK4p/exercise2?node-id=13-72&t=P2i91sIA628GBeMX-1",
+            "exercise2_timestamp": "6/2/2025 23:33:07",
+            "exercise3_figma": "https://www.figma.com/design/tDCga7g2aFWgp5DSBcXV57/Team-6--MFinance-APP-?node-id=10-101&t=yBbK8CD2p1jVhOo7-1",
+            "exercise3_timestamp": "6/2/2025 23:35:48",
+            "exercise3_team": "team-6"
+        },
+        {
+            "name": "Mais Alattar",
+            "email": "maisalattar23@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/BMrv1OLmnO41KQUfZ68mDo/202210108-s-team-library?node-id=3312-2&t=6tc7V9O52xq7xiEK-1",
+            "exercise1_timestamp": "5/30/2025 18:04:25",
+            "exercise2_figma": "https://www.figma.com/design/BMrv1OLmnO41KQUfZ68mDo/202210108-s-team-library?node-id=3324-2&t=7jFF1uO9dYPY8Lxn-1",
+            "exercise2_timestamp": "5/30/2025 22:55:54",
+            "exercise3_figma": "https://www.figma.com/design/wVwF6lJMSpWhP93hPo66dZ/Coffee-App-Project?node-id=40-7&t=d15cVsDgfLcUUbeC-1",
+            "exercise3_timestamp": "6/2/2025 23:13:30",
+            "exercise3_team": "Team-12"
+        },
+        {
+            "name": "mohamed elmehdi maghmoul",
+            "email": "moh.mehdi.mg@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/gKw9oQUBOgFUfDR5LgpaGp/Untitled?node-id=0-1&t=2vqpGYtoniySoXbI-1",
+            "exercise1_timestamp": "5/30/2025 14:55:35",
+            "exercise2_figma": "https://www.figma.com/design/EQjPxy1Ve6wQE2NjPV1CAw/Untitled?node-id=1-47&t=f1sTs7PNknqKwi19-1",
+            "exercise2_timestamp": "6/2/2025 23:58:44",
+            "exercise3_figma": "https://www.figma.com/design/YLEYiwgZO8TcsazAfNdJpZ/team2-pro?node-id=0-1&t=awj7ShCBaNIXic4G-1",
+            "exercise3_timestamp": "6/2/2025 21:49:24",
+            "exercise3_team": "team 2"
+        },
+        {
+            "name": "Mohammad Issam Barham",
+            "email": "mohammadbarhammod123@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/7ON4KPEOwWoUkG7VPqZ62A/Untitled?node-id=0-1&t=fuqi2dLNPicPXadH-1",
+            "exercise1_timestamp": "5/28/2025 2:37:52",
+            "exercise2_figma": "https://www.figma.com/design/QBU4isemPYZnJhuxXWO0fd/UI-UX?node-id=6-3&t=azqJW58cGjVNqngr-1",
+            "exercise2_timestamp": "5/30/2025 22:25:51",
+            "exercise3_figma": "https://www.figma.com/design/iDSU8FGkK5OL9pYhW1YKdW/Kunafa-Souq-Jam?node-id=8-2&t=yImVStYucP92vQ4d-1",
+            "exercise3_timestamp": "6/2/2025 3:55:19",
+            "exercise3_team": "No team just me"
+        },
+        {
+            "name": "Ne'meh Saleh Ahmed AlRababe'h",
+            "email": "nemehalrababehwork@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/8f4RiSMetCe60lb3TmMN8w/Assignment--1?node-id=5-140&t=GbZ5siLGysyWijQ2-1",
+            "exercise1_timestamp": "6/2/2025 20:47:39",
+            "exercise2_figma": "https://www.figma.com/design/L1Esi9AWJEIUeiXvLYoS67/Assignment--2?node-id=0-1&t=RGCVbLQ3fEl3L9ZW-1",
+            "exercise2_timestamp": "6/2/2025 23:33:39",
+            "exercise3_figma": "https://www.figma.com/design/lYPZMV9r6uMa2skkvKOnzN/Final-Project-Student-Budgeting-Tool-?node-id=6-8&t=W1HXprNaoDA3POr7-1",
+            "exercise3_timestamp": "6/2/2025 17:00:18",
+            "exercise3_team": "Team 19"
+        },
+        {
+            "name": "Noor Almukhtar",
+            "email": "nooralmukhtar007@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/LjhlTyVSDZyMlhOhm8M1qH/GDG-UI-UX-project?node-id=0-1&t=t7PemITzxdjlnoDV-1",
+            "exercise1_timestamp": "5/30/2025 20:36:58",
+            "exercise2_figma": "https://www.figma.com/design/LjhlTyVSDZyMlhOhm8M1qH/GDG-UI-UX-project?node-id=54-158&t=fzfNXTGHD03ZEkRR-1",
+            "exercise2_timestamp": "6/2/2025 20:46:20",
+            "exercise3_figma": "https://www.figma.com/design/LjhlTyVSDZyMlhOhm8M1qH/GDG-UI-UX-project?node-id=54-158&t=oN2IrP2AQXc0k21s-1",
+            "exercise3_timestamp": "6/2/2025 22:00:00",
+            "exercise3_team": "team 14"
+        },
+        {
+            "name": "Noor Alyazouri",
+            "email": "nooralyazouri@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/IYq72URMQSWgJclEtUW9og/NOOR-S-FIRST-GDG-HW?node-id=0-1&t=esLv1IzajyLIyqRr-1",
+            "exercise1_timestamp": "5/30/2025 20:31:35",
+            "exercise2_figma": "https://www.figma.com/design/xKsCuUAaZ3x7whJrKFLux7/NOOR-S-2ND-H.W?node-id=2-32&t=UqUAAWKEe8bWjHal-1",
+            "exercise2_timestamp": "6/2/2025 22:58:47",
+            "exercise3_figma": "https://www.figma.com/design/wVwF6lJMSpWhP93hPo66dZ/Coffee-App-Project?node-id=40-7&t=d15cVsDgfLcUUbeC-1",
+            "exercise3_timestamp": "6/2/2025 23:13:30",
+            "exercise3_team": "Team-12"
+        },
+        {
+            "name": "Remas Alhafi",
+            "email": "remasalhafi@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/AkAQHNCQ2NR8CUueNjkbGK/Untitled?node-id=0-1&t=iLhUEMgm9UhkwPl2-1",
+            "exercise1_timestamp": "5/28/2025 0:24:11",
+            "exercise2_figma": "https://www.figma.com/design/rGSv4rkIzhVtkPzD7aaz3P/UI-Style-Guide?node-id=6-75&t=8JD7Lf8iowxdpjIq-1",
+            "exercise2_timestamp": "5/30/2025 15:26:56",
+            "exercise3_figma": "https://www.figma.com/design/10eDLb9doUlx1DxYJsTzlj/final-project?node-id=0-1&t=7W5bZOBowXWFgR1h-1",
+            "exercise3_timestamp": "6/2/2025 23:53:11",
+            "exercise3_team": "team 18"
+        },
+        {
+            "name": "Remas Raslan Mehyar",
+            "email": "remas.mihyar@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/8cI6MxuYsG9dssOdUwGCkm/UI-UX-Workshop?node-id=13-5&t=8rBPaq2NVtKMVDOp-1",
+            "exercise1_timestamp": "5/29/2025 21:19:52",
+            "exercise2_figma": "https://www.figma.com/design/dwtckSDfDhwi6x3JKBiuRk/UI-UX-workshop-2?node-id=8-315&t=wc1ACMWMTkfpss8S-1",
+            "exercise2_timestamp": "5/30/2025 15:18:15",
+            "exercise3_figma": "https://www.figma.com/design/KeuQLmZoaLK2MwYJkkE0k6/UI-UX-Group-Project?node-id=4-70&t=Sa18wHAcrmfADHGm-1",
+            "exercise3_timestamp": "6/2/2025 22:45:27",
+            "exercise3_team": "KittyKart"
+        },
+        {
+            "name": "Tasnim Anas Alsasa",
+            "email": "tasneemanas05@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/ZQx59FkFmigWsWVKh96Op9/UI-UX-Study-Jam-Tasks?node-id=0-1&t=1YG9VcmF328ghMzV-1",
+            "exercise1_timestamp": "5/30/2025 22:09:38",
+            "exercise2_figma": "https://www.figma.com/design/L4RsjpMUQ4QAQLIMZfuqJ2/UI-UX-study-jam-task2?node-id=0-1&t=kFMtglVVI6kTkZtN-1",
+            "exercise2_timestamp": "6/1/2025 18:13:27",
+            "exercise3_figma": "https://www.figma.com/design/lYPZMV9r6uMa2skkvKOnzN/Final-Project-Student-Budgeting-Tool-?node-id=6-8&t=W1HXprNaoDA3POr7-1",
+            "exercise3_timestamp": "6/2/2025 17:00:18",
+            "exercise3_team": "Team 19"
+        },
+        {
+            "name": "Thafer Salah-Aldin Alkhatib",
+            "email": "dafer13782@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/1arPWtSuiHc6qz7inKzTn3/GDG-Exercises?node-id=0-1&t=CuMhTGWd0Amdqptu-1",
+            "exercise1_timestamp": "5/29/2025 14:20:35",
+            "exercise2_figma": "https://www.figma.com/design/1arPWtSuiHc6qz7inKzTn3/GDG-Exercises?node-id=21-201&t=gp79kqtwytQgP1jd-1",
+            "exercise2_timestamp": "5/29/2025 20:56:12",
+            "exercise3_figma": "https://www.figma.com/design/aDcCJ3qAKp6PE2MlZK69zG/GDG-UI-UX-Final-Exercise?node-id=0-1&t=UsSLaquEO4ZGKEWz-1",
+            "exercise3_timestamp": "6/2/2025 23:35:01",
+            "exercise3_team": "Team 5"
+        },
+        {
+            "name": "Zaid Yaseen",
+            "email": "zdyassin22@gmail.com",
+            "exercise1_figma": "https://www.figma.com/design/NeHTHzxGsway3IsZdz6RWK/Exercise-1?node-id=0-1&t=if3LoAJwsrfe5bXO-1",
+            "exercise1_timestamp": "5/29/2025 23:42:23",
+            "exercise2_figma": "https://www.figma.com/design/oHqjsDGOUZYJosybV5AuES/Exercise-2?node-id=1-131&t=TYjkmcQJE5nd0EpX-1",
+            "exercise2_timestamp": "5/30/2025 17:10:07",
+            "exercise3_figma": "https://www.figma.com/design/YLEYiwgZO8TcsazAfNdJpZ/team2-pro?node-id=0-1&t=awj7ShCBaNIXic4G-1",
+            "exercise3_timestamp": "6/2/2025 21:49:24",
+            "exercise3_team": "team 2"
+        }
+    ];
+
+    // Function to populate table
+    function populateTable(data = students) {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = '';
+
+        if (data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="9" class="no-results">No students found matching your search.</td></tr>';
+            return;
+        }
+
+        data.forEach((student, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                    <td class="student-name">
+                        ${student.name}
+                        <span class="qualified-badge">QUALIFIED</span>
+                    </td>
+                    <td class="email">${student.email}</td>
+                    <td><a href="${student.exercise1_figma}" target="_blank" class="figma-link" title="${student.exercise1_figma}">${student.exercise1_figma}</a></td>
+                    <td class="timestamp">${student.exercise1_timestamp}</td>
+                    <td><a href="${student.exercise2_figma}" target="_blank" class="figma-link" title="${student.exercise2_figma}">${student.exercise2_figma}</a></td>
+                    <td class="timestamp">${student.exercise2_timestamp}</td>
+                    <td><a href="${student.exercise3_figma}" target="_blank" class="figma-link" title="${student.exercise3_figma}">${student.exercise3_figma}</a></td>
+                    <td class="timestamp">${student.exercise3_timestamp}</td>
+                    <td><span class="team-name" title="${student.exercise3_team}">${student.exercise3_team}</span></td>
+                `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Function to filter table
+    function filterTable(searchTerm) {
+        const filteredStudents = students.filter(student =>
+            student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            student.exercise3_team.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        populateTable(filteredStudents);
+    }
+
+    // Function to download Excel
+    function downloadExcel() {
+        const worksheet = XLSX.utils.json_to_sheet(students.map((student, index) => ({
+            'Certificate Number': `UIUX-2025-${String(index + 1).padStart(3, '0')}`,
+            'Student Name': student.name,
+            'Email': student.email,
+            'Status': 'QUALIFIED FOR CERTIFICATE',
+            'Exercise 1 Figma Link': student.exercise1_figma,
+            'Exercise 1 Submission Date': student.exercise1_timestamp,
+            'Exercise 2 Figma Link': student.exercise2_figma,
+            'Exercise 2 Submission Date': student.exercise2_timestamp,
+            'Exercise 3 Figma Link': student.exercise3_figma,
+            'Exercise 3 Submission Date': student.exercise3_timestamp,
+            'Exercise 3 Team Name': student.exercise3_team,
+            'Requirements Met': 'Exercises ✓ | Attendance ✓'
+        })));
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Final Certificate List');
+
+        // Auto-size columns
+        const colWidths = [
+            { wch: 18 }, // Certificate Number
+            { wch: 25 }, // Student Name
+            { wch: 30 }, // Email
+            { wch: 25 }, // Status
+            { wch: 50 }, // Exercise 1 Figma
+            { wch: 20 }, // Exercise 1 Date
+            { wch: 50 }, // Exercise 2 Figma
+            { wch: 20 }, // Exercise 2 Date
+            { wch: 50 }, // Exercise 3 Figma
+            { wch: 20 }, // Exercise 3 Date
+            { wch: 20 }, // Team Name
+            { wch: 25 }  // Requirements Met
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Add title row
+        const currentDate = new Date().toLocaleDateString();
+        const titleRow = [`UI/UX StudyJam 2025 - Final Certificate List (Generated: ${currentDate})`];
+        XLSX.utils.sheet_add_aoa(worksheet, [titleRow], { origin: "A1" });
+        XLSX.utils.sheet_add_aoa(worksheet, [['Total Qualified Students: 17 | Requirements: All 3 Exercises + 1.5h Attendance per Session']], { origin: "A2" });
+
+        const fileName = `UI_UX_StudyJam_2025_Final_Certificate_List_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+    }
+
+    // Initialize table on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        populateTable();
+
+        // Add some celebration effects
+        console.log('🎉 Congratulations to our 17 qualified students! 🎉');
+        console.log('These students have successfully completed:');
+        console.log('✅ All 3 UI/UX exercises with Figma submissions');
+        console.log('✅ At least 1.5 hours attendance per workshop session');
+        console.log('🏆 They are now eligible for UI/UX StudyJam certificates!');
+    });
+</script>
+</body>
+</html>
