@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UI/UX StudyJam - Final Qualified Students</title>
-    <meta name="description" content="UI/UX StudyJam 2025 Certificate Qualified Students - Interactive dashboard showing 27 students who completed all exercises and met attendance requirements">
+    <meta name="description" content="UI/UX StudyJam 2025 Certificate Qualified Students - Interactive dashboard showing 31 students who completed all exercises and met attendance requirements">
     <meta name="keywords" content="UI/UX, StudyJam, certificates, Figma, workshop, students">
     <meta property="og:title" content="UI/UX StudyJam 2025 - Qualified Students">
     <meta property="og:description" content="Interactive dashboard showing certificate-qualified students">
@@ -268,7 +268,7 @@
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-number">27</div>
+            <div class="stat-number">31</div>
             <div class="stat-label">Final Qualified Students</div>
         </div>
         <div class="stat-card">
@@ -280,7 +280,7 @@
             <div class="stat-label">Total Registrations</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">87.1%</div>
+            <div class="stat-number">100%</div>
             <div class="stat-label">Exercise Completion Rate</div>
         </div>
     </div>
@@ -775,29 +775,47 @@
 
         // Auto-size columns
         const colWidths = [
-            { wch: 18 }, // Certificate Number
-            { wch: 25 }, // Student Name
+            { wch: 20 }, // Certificate Number
+            { wch: 30 }, // Student Name
             { wch: 15 }, // Student ID
-            { wch: 30 }, // Email
+            { wch: 35 }, // Email
             { wch: 25 }, // Status
-            { wch: 50 }, // Exercise 1 Figma
-            { wch: 20 }, // Exercise 1 Date
-            { wch: 50 }, // Exercise 2 Figma
-            { wch: 20 }, // Exercise 2 Date
-            { wch: 50 }, // Exercise 3 Figma
-            { wch: 20 }, // Exercise 3 Date
+            { wch: 60 }, // Exercise 1 Figma
+            { wch: 22 }, // Exercise 1 Date
+            { wch: 60 }, // Exercise 2 Figma
+            { wch: 22 }, // Exercise 2 Date
+            { wch: 60 }, // Exercise 3 Figma
+            { wch: 22 }, // Exercise 3 Date
             { wch: 20 }, // Team Name
-            { wch: 25 }  // Requirements Met
+            { wch: 30 }  // Requirements Met
         ];
         worksheet['!cols'] = colWidths;
 
-        // Add title row
+        // Add title and summary rows
         const currentDate = new Date().toLocaleDateString();
         const titleRow = [`UI/UX StudyJam 2025 - Final Certificate List (Generated: ${currentDate})`];
+        const summaryRow = [`Total Qualified Students: 31 | Requirements: All 3 Exercises + Attendance | All Student IDs Included`];
+        
+        // Insert title rows at the beginning
         XLSX.utils.sheet_add_aoa(worksheet, [titleRow], { origin: "A1" });
-        XLSX.utils.sheet_add_aoa(worksheet, [['Total Qualified Students: 31 | Requirements: All 3 Exercises + 1.5h Attendance per Session']], { origin: "A2" });
+        XLSX.utils.sheet_add_aoa(worksheet, [summaryRow], { origin: "A2" });
+        XLSX.utils.sheet_add_aoa(worksheet, [['']], { origin: "A3" }); // Empty row for spacing
 
-        const fileName = `UI_UX_StudyJam_2025_Final_Certificate_List_${new Date().toISOString().split('T')[0]}.xlsx`;
+        // Style the title rows (if supported)
+        if (worksheet['A1']) {
+            worksheet['A1'].s = {
+                font: { bold: true, sz: 14 },
+                alignment: { horizontal: 'center' }
+            };
+        }
+        if (worksheet['A2']) {
+            worksheet['A2'].s = {
+                font: { bold: true, sz: 12 },
+                alignment: { horizontal: 'center' }
+            };
+        }
+
+        const fileName = `UI_UX_StudyJam_2025_Certificate_List_with_StudentIDs_${new Date().toISOString().split('T')[0]}.xlsx`;
         XLSX.writeFile(workbook, fileName);
     }
 
