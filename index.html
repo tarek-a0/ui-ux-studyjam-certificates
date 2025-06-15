@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UI/UX StudyJam - Final Qualified Students</title>
-    <meta name="description" content="UI/UX StudyJam 2025 Certificate Qualified Students - Interactive dashboard showing 31 students who completed all exercises and met attendance requirements">
+    <meta name="description" content="UI/UX StudyJam 2025 Certificate Qualified Students - Interactive dashboard showing students who completed all exercises and met attendance requirements">
     <meta name="keywords" content="UI/UX, StudyJam, certificates, Figma, workshop, students">
     <meta property="og:title" content="UI/UX StudyJam 2025 - Qualified Students">
     <meta property="og:description" content="Interactive dashboard showing certificate-qualified students">
     <meta property="og:type" content="website">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* (existing CSS unchanged) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -18,237 +19,35 @@
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
             min-height: 100vh;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-
-        .header p {
-            margin: 5px 0;
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        .header .criteria {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .criteria h3 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-
-        .criteria ul {
-            margin: 0;
-            padding-left: 20px;
-            text-align: left;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            padding: 30px;
-            background: #f0fdf4;
-            border-bottom: 1px solid #bbf7d0;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 2px solid #bbf7d0;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: 700;
-            color: #059669;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #374151;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .controls {
-            padding: 20px 30px;
-            background: #f0fdf4;
-            border-bottom: 1px solid #bbf7d0;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
-        }
-
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
-        }
-
-        .search-box {
-            padding: 10px 15px;
-            border: 2px solid #bbf7d0;
-            border-radius: 6px;
-            font-size: 14px;
-            flex: 1;
-            max-width: 300px;
-            transition: border-color 0.3s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: #059669;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        th {
-            background: #f0fdf4;
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: 600;
-            color: #374151;
-            border-bottom: 2px solid #bbf7d0;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            font-size: 12px;
-        }
-
-        td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #f0fdf4;
-            vertical-align: top;
-        }
-
-        tr:hover {
-            background: #f0fdf4;
-        }
-
-        .figma-link {
-            color: #059669;
-            text-decoration: none;
-            font-weight: 500;
-            word-break: break-all;
-            display: block;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .figma-link:hover {
-            text-decoration: underline;
-        }
-
-        .student-name {
-            font-weight: 600;
-            color: #1f2937;
-            min-width: 150px;
-        }
-
-        .email {
-            color: #6b7280;
-            font-size: 12px;
-            max-width: 200px;
-            word-break: break-all;
-        }
-
-        .timestamp {
-            color: #6b7280;
-            font-size: 11px;
-            white-space: nowrap;
-        }
-
-        .team-name {
-            background: #dcfce7;
-            color: #166534;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-            display: inline-block;
-            max-width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .qualified-badge {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 8px;
-        }
-
-        .student-id {
-            font-family: 'Courier New', monospace;
-            background: #f0fdf4;
-            color: #059669;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { margin: 0 0 10px 0; font-size: 28px; font-weight: 600; }
+        .header p { margin: 5px 0; opacity: 0.9; font-size: 16px; }
+        .criteria { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .criteria h3 { margin: 0 0 10px 0; font-size: 18px; }
+        .criteria ul { margin: 0; padding-left: 20px; text-align: left; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; padding: 30px; background: #f0fdf4; border-bottom: 1px solid #bbf7d0; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid #bbf7d0; }
+        .stat-number { font-size: 24px; font-weight: 700; color: #059669; margin-bottom: 5px; }
+        .stat-label { color: #374151; font-size: 14px; font-weight: 500; }
+        .controls { padding: 20px 30px; background: #f0fdf4; border-bottom: 1px solid #bbf7d0; display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .download-btn { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3); }
+        .download-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4); }
+        .search-box { padding: 10px 15px; border: 2px solid #bbf7d0; border-radius: 6px; font-size: 14px; flex: 1; max-width: 300px; transition: border-color 0.3s ease; }
+        .search-box:focus { outline: none; border-color: #059669; }
+        .table-container { overflow-x: auto; max-height: 600px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { background: #f0fdf4; padding: 12px 8px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #bbf7d0; position: sticky; top: 0; z-index: 10; font-size: 12px; }
+        td { padding: 8px 6px; border-bottom: 1px solid #f0fdf4; vertical-align: top; }
+        tr:hover { background: #f0fdf4; }
+        .figma-link { color: #059669; text-decoration: none; font-weight: 500; word-break: break-all; display: block; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .figma-link:hover { text-decoration: underline; }
+        .student-name { font-weight: 600; color: #1f2937; min-width: 150px; }
+        .email { color: #6b7280; font-size: 12px; max-width: 200px; word-break: break-all; }
+        .timestamp { color: #6b7280; font-size: 11px; white-space: nowrap; }
+        .team-name { background: #dcfce7; color: #166534; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 500; display: inline-block; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .no-results { text-align: center; padding: 40px; color: #6b7280; font-style: italic; }
+        .student-id { font-family: 'Courier New', monospace; background: #f0fdf4; color: #059669; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -256,7 +55,6 @@
     <div class="header">
         <h1>🏆 UI/UX StudyJam - Final Qualified Students</h1>
         <p>Students eligible for certificates</p>
-
         <div class="criteria">
             <h3>📋 Certificate Requirements</h3>
             <ul>
@@ -268,11 +66,11 @@
 
     <div class="stats">
         <div class="stat-card">
-            <div class="stat-number">31</div>
+            <div class="stat-number">45</div>
             <div class="stat-label">Final Qualified Students</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">31</div>
+            <div class="stat-number">45</div>
             <div class="stat-label">Completed All Exercises</div>
         </div>
         <div class="stat-card">
@@ -306,903 +104,110 @@
                 <th>Team Name</th>
             </tr>
         </thead>
-            <tbody id="tableBody">
-            </tbody>
+            <tbody id="tableBody"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // Updated list of 27 qualified students with corrected student IDs
-const students = [
-    {
-        "name": "Jana Abdallah",
-        "email": "janaabdallah1230@gmail.com",
-        "studentId": "202330001",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ibrahim Shaheen",
-        "email": "202120378@students.asu.edu.jo",
-        "studentId": "202120378",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Dima jayyousi",
-        "email": "deemajayousi2004@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Almanhal Abdallah",
-        "email": "almanhal.abdallah@gmail.com",
-        "studentId": "202110246",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Basheer Hossam Yasin",
-        "email": "basherhossam2006@gmail.com",
-        "studentId": "202411576",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Remas Alhafi",
-        "email": "remasalhafi@gmail.com",
-        "studentId": "202312084",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ahmad Ali",
-        "email": "ahmadalsayyed4444@gmail.com",
-        "studentId": "202420577",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "layan aljubeh",
-        "email": "Layanaljubeh41@gmail.com",
-        "studentId": "202310150",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ayah Abuhaltam",
-        "email": "ayahhaltam@gmail.com",
-        "studentId": "202310465",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Thafer Salah-Aldin Alkhatib",
-        "email": "dafer13782@gmail.com",
-        "studentId": "202320077",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Samar Alkhayyat",
-        "email": "N/A",
-        "studentId": "202120426",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Zaid Yaseen",
-        "email": "zdyassin22@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mohammad Issam Barham",
-        "email": "mohammadbarham77@gmail.com",
-        "studentId": "202020328",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Nada Mohamed Barahmiah",
-        "email": "naadambt03@gmail.com",
-        "studentId": "202120391",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Haya anas ismael assad",
-        "email": "hayaassad10@gmail.com",
-        "studentId": "202412822",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figmaconst students = [
-    {
-        "name": "Jana Abdallah",
-        "email": "janaabdallah1230@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ibrahim Shaheen",
-        "email": "202120378@students.asu.edu.jo",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Dima jayyousi",
-        "email": "deemajayousi2004@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Almanhal Abdallah",
-        "email": "almanhal.abdallah@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Basheer Hossam Yasin",
-        "email": "basherhossam2006@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Remas Alhafi",
-        "email": "remasalhafi@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ahmad Ali",
-        "email": "ahmadalsayyed4444@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "layan aljubeh",
-        "email": "Layanaljubeh41@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ayah Abuhaltam",
-        "email": "ayahhaltam@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Thafer Salah-Aldin Alkhatib",
-        "email": "dafer13782@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Samar Alkhayyat",
-        "email": "N/A",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Zaid Yaseen",
-        "email": "zdyassin22@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mohammad Issam Barham",
-        "email": "mohammadbarham77@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Nada Mohamed Barahmiah",
-        "email": "naadambt03@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Haya anas ismael assad",
-        "email": "hayaassad10@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Rami Al-Wassity",
-        "email": "RamiAlWassity@gmail.com",
-        "studentId": "202310477",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Zaina  Mohammad Saeed Al-Natour",
-        "email": "alnatourzaina27@gmail.com",
-        "studentId": "202210360",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Moath imad naser eddien",
-        "email": "moathimad882@gmail.com",
-        "studentId": "202412101",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Amro Mujeeb Abu-Eloun",
-        "email": "amroabueloun@hotmail.com",
-        "studentId": "202210085",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Tasnim Anas Alsasa",
-        "email": "tasneemanas05@gmail.com",
-        "studentId": "202210741",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Dyala Ibrahim Nafis",
-        "email": "dyalanafis722@gmail.com",
-        "studentId": "202411892",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Abdalrahman Nader Albaroudi",
-        "email": "abedwaheed1@gmail.com",
-        "studentId": "202120412",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Momen Melhem",
-        "email": "202220765@students.asu.edu.jo",
-        "studentId": "202220765",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Maha Mehdawi",
-        "email": "Maha.mehdawi2006@gmail.com",
-        "studentId": "202110041",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "ayman salem alharari",
-        "email": "aymanalharari200001@gmail.com",
-        "studentId": "202010990",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Muneer Reziq",
-        "email": "muneerreziq004@gmail.com",
-        "studentId": "202210242",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "yousef abutoha",
-        "email": "202211102@students.asu.edu.jo",
-        "studentId": "202211102",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Kareem Abu Nofal",
-        "email": "kareemnofal264@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Noor Almukhtar",
-        "email": "nooralmukhtar007@gmail.com",
-        "studentId": "202411114",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Jad Mahdi Ahmad",
-        "email": "jadjado04@gmail.com",
-        "studentId": "202210866",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "بدران عماد الدين بدران بدر",
-        "email": "bdrvibes@gmail.com",
-        "studentId": "202410889",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Bayan Kattab Alawneh",
-        "email": "bayan44alawneh@gamil.com",
-        "studentId": "202311339",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ameen Abushanab",
-        "email": "ameenabushanab1@gmail.com",
-        "studentId": "202310691",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Noor Alyazouri",
-        "email": "nooralyazouri@gmail.com",
-        "studentId": "202310792",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Alwaleed Muqbel",
-        "email": "alwaleedmuqbel@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "bashar alziq",
-        "email": "202111210@students.asu.edu.jo",
-        "studentId": "202111210",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Abdallah Mahmoud Abdullah Mustafa",
-        "email": "202310483@students.asu.edu.jo",
-        "studentId": "202310483",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "khalil alrahman alkerm",
-        "email": "khaqrm@gmail.com",
-        "studentId": "201910812",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Ne'meh Saleh Ahmed AlRababe'h",
-        "email": "nemehalrababehwork@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Saleh yaseen",
-        "email": "saleh.yaseen@email.com",
-        "studentId": "202410359",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Farah Odeh",
-        "email": "farodeh14@gmail.com",
-        "studentId": "202420270",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mohamed ElMehdi Maghmoul",
-        "email": "moh.mehdi.mg@gmail.com",
-        "studentId": "202120054",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Remas Raslan Mehyar",
-        "email": "remas.mihyar@gmail.com",
-        "studentId": "202120366",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mais Alattar",
-        "email": "maisalattar23@gmail.com",
-        "studentId": "202210108",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Abdalrahman Yahia",
-        "email": "abdalrahman.yahia@email.com",
-        "studentId": "202210410",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    }
-];": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mohamed ElMehdi Maghmoul",
-        "email": "moh.mehdi.mg@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Remas Raslan Mehyar",
-        "email": "remas.mihyar@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Mais Alattar",
-        "email": "maisalattar23@gmail.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    },
-    {
-        "name": "Abdalrahman Yahia",
-        "email": "abdalrahman.yahia@email.com",
-        "studentId": "N/A",
-        "exercise1_figma": "N/A",
-        "exercise1_timestamp": "N/A",
-        "exercise2_figma": "N/A",
-        "exercise2_timestamp": "N/A",
-        "exercise3_figma": "N/A",
-        "exercise3_timestamp": "N/A",
-        "exercise3_team": "N/A"
-    }
-];
+    // Consolidated and cleaned student data
+    const students = [
+        { name: "Jana Abdallah", email: "janaabdallah1230@gmail.com", studentId: "202330001", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Ibrahim Shaheen", email: "202120378@students.asu.edu.jo", studentId: "202120378", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Dima jayyousi", email: "deemajayousi2004@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Almanhal Abdallah", email: "almanhal.abdallah@gmail.com", studentId: "202110246", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Basheer Hossam Yasin", email: "basherhossam2006@gmail.com", studentId: "202411576", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Remas Alhafi", email: "remasalhafi@gmail.com", studentId: "202312084", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Ahmad Ali", email: "ahmadalsayyed4444@gmail.com", studentId: "202420577", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "layan aljubeh", email: "Layanaljubeh41@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Ayah Abuhaltam", email: "ayahhaltam@gmail.com", studentId: "202310465", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Thafer Salah-Aldin Alkhatib", email: "dafer13782@gmail.com", studentId: "202320077", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Samar Alkhayyat", email: "N/A", studentId: "202120426", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Zaid Yaseen", email: "zdyassin22@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Mohammad Issam Barham", email: "mohammadbarham77@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Nada Mohamed Barahmiah", email: "naadambt03@gmail.com", studentId: "202120391", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Haya anas ismael assad", email: "hayaassad10@gmail.com", studentId: "202412822", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Rami Al-Wassity", email: "RamiAlWassity@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Zaina Mohammad Saeed Al-Natour", email: "alnatourzaina27@gmail.com", studentId: "202210360", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Moath imad naser eddien", email: "moathimad882@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Amro Mujeeb Abu-Eloun", email: "amroabueloun@hotmail.com", studentId: "202210085", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Tasnim Anas Alsasa", email: "tasneemanas05@gmail.com", studentId: "202210741", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Dyala Ibrahim Nafis", email: "dyalanafis722@gmail.com", studentId: "202411892", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" },
+        { name: "Abdalrahman Nader Albaroudi", email: "abedwaheed1@gmail.com", studentId: "202120412", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_team: "N/A" },
+        { name: "Momen Melhem", email: "202220765@students.asu.edu.jo", studentId: "202220765", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_team: "N/A" },
+        { name: "Maha Mehdawi", email: "Maha.mehdawi2006@gmail.com", studentId: "202110041", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_team: "N/A" },
+        { name: "ayman salem alharari", email: "aymanalharari200001@gmail.com", studentId: "202010990", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Muneer Reziq", email: "muneerreziq004@gmail.com", studentId: "202210242", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_TEAM: "N/A" },
+        { name: "yousef abutoha", email: "202211102@students.asu.edu.jo", studentId: "202211102", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_timestamp: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Kareem Abu NOfal", email: "kareemnofal264@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Noor Almukhtar", email: "nooralmukhtar007@gmail.com", studentId: "202411114", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Jad Mahdi Ahmad", email: "jadjado04@gmail.com", studentId: "202210866", exercise1_figma: "N/A", exercise1_timestamp: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "بدران عماد الدين بدران بدر", email: "bdrvibes@gmail.com", studentId: "202410889", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Bayan Kattab Alawneh", email: "bayan44alawneh@gamil.com", studentId: "202311339", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Ameen Abushanab", email: "ameenabushanab1@gmail.com", studentId: "202310691", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Noor Alyazouri", email: "nooralyazouri@gmail.com", studentId: "202310792", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "Alwaleed Muqbel", email: "alwaleedmuqbel@gmail.com", studentId: "N/A", exercise1_figma: "N/A", exercise1_TIMESTAMP: "N/A", exercise2_figma: "N/A", exercise2_TIMESTAMP: "N/A", exercise3_figma: "N/A", exercise3_TIMESTAMP: "N/A", exercise3_TEAM: "N/A" },
+        { name: "bashar alziq", email: "202111210@students.asu.edu.jo`, exercise1_figma: `"N/A"`, studentId: "202111210", exercise2_figma: "N/A", exercise3_figma: "N/A", exercise3_timestamp: "N/A", exercise3_team: "N/A" }
+    ];
 
-    // Function to populate table
     function populateTable(data = students) {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
-        
-        if (data.length === 0) {
+        if (!data.length) {
             tbody.innerHTML = '<tr><td colspan="10" class="no-results">No students found matching your search.</td></tr>';
             return;
         }
-        
-        data.forEach(student => {
+        data.forEach(s => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="student-name">${student.name}</td>
-                <td><span class="student-id">${student.studentId}</span></td>
-                <td class="email">${student.email}</td>
-                <td><a href="${student.exercise1_figma}" target="_blank" class="figma-link">View Exercise 1</a></td>
-                <td class="timestamp">${student.exercise1_timestamp}</td>
-                <td><a href="${student.exercise2_figma}" target="_blank" class="figma-link">View Exercise 2</a></td>
-                <td class="timestamp">${student.exercise2_timestamp}</td>
-                <td><a href="${student.exercise3_figma}" target="_blank" class="figma-link">View Exercise 3</a></td>
-                <td class="timestamp">${student.exercise3_timestamp}</td>
-                <td><span class="team-name">${student.exercise3_team}</span></td>
+                <td class="student-name">\${s.name}</td>
+                <td><span class="student-id">\${s.studentId || 'N/A'}</span></td>
+                <td class="email">\${s.email || 'N/A'}</td>
+                <td><a href="\${s.exercise1_figma}" target="_blank" class="figma-link">View Exercise 1</a></td>
+                <td class="timestamp">\${s.exercise1_timestamp}</td>
+                <td><a href="\${s.exercise2_figma}" target="_blank" class="figma-link">View Exercise 2</a></td>
+                <td class="timestamp">\${s.exercise2_timestamp}</td>
+                <td><a href="\${s.exercise3_figma}" target="_blank" class="figma-link">View Exercise 3</a></td>
+                <td class="timestamp">\${s.exercise3_TIMESTAMP}</td>
+                <td><span class="team-name">\${s.exercise3_TEAM}</span></td>
             `;
             tbody.appendChild(row);
         });
     }
 
-    // Function to filter table
-    function filterTable(searchTerm) {
-        const filtered = students.filter(student => 
-            student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            student.exercise3_team.toLowerCase().includes(searchTerm.toLowerCase())
+    function filterTable(term) {
+        const filtered = students.filter(s =>
+            (s.name || '').toLowerCase().includes(term.toLowerCase()) ||
+            (s.email || '').toLowerCase().includes(term.toLowerCase()) ||
+            (s.studentId || '').toLowerCase().includes(term.toLowerCase()) ||
+            (s.exercise3_TEAM || '').toLowerCase().includes(term.toLowerCase())
         );
         populateTable(filtered);
     }
 
-    // Function to download Excel
     function downloadExcel() {
-        const worksheet = XLSX.utils.json_to_sheet(students.map((student, index) => ({
-            'Certificate Number': `UIUX-2025-${String(index + 1).padStart(3, '0')}`,
-            'Student Name': student.name,
-            'Student ID': student.studentId,
-            'Email': student.email,
+        const data = students.map((s, i) => ({
+            'Certificate Number': `UIUX-2025-${String(i+1).padStart(3,'0')}`,
+            'Student Name': s.name,
+            'Student ID': s.studentId || 'N/A',
+            'Email': s.email || 'N/A',
             'Status': 'QUALIFIED FOR CERTIFICATE',
-            'Exercise 1 Figma Link': student.exercise1_figma,
-            'Exercise 1 Submission Date': student.exercise1_timestamp,
-            'Exercise 2 Figma Link': student.exercise2_figma,
-            'Exercise 2 Submission Date': student.exercise2_timestamp,
-            'Exercise 3 Figma Link': student.exercise3_figma,
-            'Exercise 3 Submission Date': student.exercise3_timestamp,
-            'Exercise 3 Team Name': student.exercise3_team,
+            'Exercise 1 Figma Link': s.exercise1_figma,
+            'Exercise 1 Submission Date': s.exercise1_timestamp,
+            'Exercise 2 Figma Link': s.exercise2_figma,
+            'Exercise 2 Submission Date': s.exercise2_timestamp,
+            'Exercise 3 Figma Link': s.exercise3_figma,
+            'Exercise 3 Submission Date': s.exercise3_TIMESTAMP,
+            'Exercise 3 Team Name': s.exercise3_TEAM,
             'Requirements Met': 'Exercises ✓ | Attendance ✓'
-        })));
-
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Final Certificate List');
-
-        // Auto-size columns
-        const colWidths = [
-            { wch: 20 }, // Certificate Number
-            { wch: 30 }, // Student Name
-            { wch: 15 }, // Student ID
-            { wch: 35 }, // Email
-            { wch: 25 }, // Status
-            { wch: 60 }, // Exercise 1 Figma
-            { wch: 22 }, // Exercise 1 Date
-            { wch: 60 }, // Exercise 2 Figma
-            { wch: 22 }, // Exercise 2 Date
-            { wch: 60 }, // Exercise 3 Figma
-            { wch: 22 }, // Exercise 3 Date
-            { wch: 20 }, // Team Name
-            { wch: 30 }  // Requirements Met
-        ];
-        worksheet['!cols'] = colWidths;
-
-        // Add title and summary rows
-        const currentDate = new Date().toLocaleDateString();
-        const titleRow = [`UI/UX StudyJam 2025 - Final Certificate List (Generated: ${currentDate})`];
-        const summaryRow = [`Total Qualified Students: 31 | Requirements: All 3 Exercises + Attendance | All Student IDs Included`];
-        
-        // Insert title rows at the beginning
-        XLSX.utils.sheet_add_aoa(worksheet, [titleRow], { origin: "A1" });
-        XLSX.utils.sheet_add_aoa(worksheet, [summaryRow], { origin: "A2" });
-        XLSX.utils.sheet_add_aoa(worksheet, [['']], { origin: "A3" }); // Empty row for spacing
-
-        // Style the title rows (if supported)
-        if (worksheet['A1']) {
-            worksheet['A1'].s = {
-                font: { bold: true, sz: 14 },
-                alignment: { horizontal: 'center' }
-            };
-        }
-        if (worksheet['A2']) {
-            worksheet['A2'].s = {
-                font: { bold: true, sz: 12 },
-                alignment: { horizontal: 'center' }
-            };
-        }
-
-        const fileName = `UI_UX_StudyJam_2025_Certificate_List_with_StudentIDs_${new Date().toISOString().split('T')[0]}.xlsx`;
-        XLSX.writeFile(workbook, fileName);
+        }));
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Certificate List');
+        const filename = `UI_UX_StudyJam_2025_Certificate_List_${new Date().toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(wb, filename);
     }
 
-    // Initialize table on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        populateTable();
-
-        // Add some celebration effects
-        console.log('🎉 Congratulations to our 31 qualified students! 🎉');
-        console.log('These students have successfully completed:');
-        console.log('✅ All 3 UI/UX exercises with Figma submissions');
-        console.log('✅ At least 1.5 hours attendance per workshop session');
-        console.log('🏆 They are now eligible for UI/UX StudyJam certificates!');
-    });
+    document.addEventListener('DOMContentLoaded', () => populateTable());
 </script>
 </body>
 </html>
